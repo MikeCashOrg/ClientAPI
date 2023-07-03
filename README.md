@@ -1,6 +1,8 @@
 # ClientAPI
 API for interaction with the MikeCash Node via Lua
 
+[status.wayauth.com](https://status.wayauth.com/)
+
 Change the following inside the script:
 * Title
 * LINKVERTISE_ID
