@@ -50,6 +50,17 @@ function Task:copyURL()
     return setclipboard(URL)
 end
 
+function Task:verifyToken(Token)
+    local URLBase = "http://%s/v2/tokens/exists/%s"
+    local URL = URLBase:format(self.API_HOST, Token)
+    local Response = game:HttpGet(URL)
+    local Decode = HttpService:JSONDecode(Response)
+    if Decode and Decode.success then
+        return true
+    end
+    return false
+end
+
 local nTask = Task.new(API_HOST, LINKVERTISE_ID, LINKVERTISE_COUNT, TOKEN_EXPIRE_TIME); nTask:create()
 local Verified = false
 
@@ -72,9 +83,18 @@ Iris:Connect(function()
     end
 end)
 
+if isfile("test-token.txt") then
+    if nTask:verifyToken(readfile("test-token.txt")) then
+        Verified = true
+    end
+end
+
+
 repeat task.wait() until Verified
 
 warn("Verified website at", nTask.data.timestamp)
 warn("Finished at", os.date("%c"))
 warn("Authentication Token", nTask.data.token)
 warn("Authentication Token Expire Time", TOKEN_EXPIRE_TIME)
+
+writefile("test-token.txt", nTask.data.token)
