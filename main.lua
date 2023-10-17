@@ -83,18 +83,22 @@ Iris:Connect(function()
     end
 end)
 
+local TokenPassed
+
 if isfile("test-token.txt") then
     if nTask:verifyToken(readfile("test-token.txt")) then
         Verified = true
+        TokenPassed = true
     end
 end
 
 
 repeat task.wait() until Verified
-
+if not TokenPassed then
 warn("Verified website at", nTask.data.timestamp)
 warn("Finished at", os.date("%c"))
 warn("Authentication Token", nTask.data.token)
 warn("Authentication Token Expire Time", TOKEN_EXPIRE_TIME)
 
 writefile("test-token.txt", nTask.data.token)
+end
